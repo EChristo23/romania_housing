@@ -8,7 +8,8 @@ labs = {
     'price_per_sqmeter': 'Price (\N{euro sign}) per net m\u00b2',
     'probability':  'Proportion',
     'property_type': 'Property Type',
-    'zona': 'Region/Zona'
+    'county': 'County',
+    'city': 'City'
 }
 
 var_names = {
@@ -22,7 +23,8 @@ units = {
     'suprafata_utila': 'm\u00b2',
     'price_per_sqmeter': '\N{euro sign}/ m\u00b2'
 }
-custom_data = ["id", 'property_type', 'zona', 'price_per_sqmeter', 'price', 'suprafata_utila', 'url']
+custom_data = ["id", 'property_type', 'county',
+               'price_per_sqmeter', 'price', 'suprafata_utila', 'url', 'city']
 
 attributes_dict = dict(zip(custom_data, range(len(custom_data))))
 
