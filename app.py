@@ -301,7 +301,7 @@ def property_count(county, property_type, input_variable, slider_value):
     Input('intermediate-value', 'data')
 )
 def update_map(input_variable, input_df):
-    input_df = pd.DataFrame.from_dict(input_df)
+    #input_df = pd.DataFrame.from_dict(input_df)
 
     map_graph = px.scatter_mapbox(
         # title='''Romania's Map''',
@@ -373,24 +373,23 @@ def update_map(input_variable, input_df):
     Output('ecdf', 'figure'),
     Input('variable', 'value'),
     Input('intermediate-value', 'data'),
-    Input('map', 'clickData'),
-    Input('map', 'selectedData')
+    Input('map', 'clickData')
+    #Input('map', 'selectedData')
 )
-def update_ecdf(input_variable, input_df, point, selection
+def update_ecdf(input_variable, input_df, point#, selection
                 ):
     filtered_df = pd.DataFrame.from_dict(input_df)
-
-    if selection:
-        ids = [i.get('customdata')[get_custom_data_index('id')]
-               for i in selection.get('points')]
-        filtered_df = filtered_df.loc[filtered_df.id.isin(ids)]
+    # filtered_df = input_df
+    # if selection:
+    #     ids = [i.get('customdata')[get_custom_data_index('id')]
+    #            for i in selection.get('points')]
+    #     filtered_df = filtered_df.loc[filtered_df.id.isin(ids)]
 
     fig = px.ecdf(
         filtered_df,
         x=input_variable,
         template=load_figure_template('cyborg'),
-        # labels=labs,
-        markers=False,
+        markers=True,
         lines=True,
         title="Cumulative Proportion by {variable}".format(
             variable=labs.get(input_variable)),
@@ -401,13 +400,14 @@ def update_ecdf(input_variable, input_df, point, selection
         yaxis={'title': 'Cumulative Proportion (%)'},
         xaxis={'title': labs.get(input_variable)},
         yaxis_tickformat='.1%',
-        transition_duration=100,
+        # transition_duration=0,
         paper_bgcolor='rgba(0,0,0,0)',
         title_x=0.5
     )
 
     fig.update_traces(
         line_color='#7201a8',
+        line={'width': 5},
         marker={
             'color': filtered_df[input_variable].sort_values(),
             'colorscale': 'Plasma_r',
@@ -421,11 +421,9 @@ def update_ecdf(input_variable, input_df, point, selection
         point_id = point.get('points')[0].get('customdata')[
             get_custom_data_index('id')]
         if point_id in filtered_df.id.values:
-            data = filtered_df.loc[filtered_df.id == point_id].to_dict(orient='records')[0].get(
-                input_variable)
+            data = point.get('points')[0].get('customdata')[get_custom_data_index(input_variable)]
             x_coordinate = data
-            y_coordinate = percentileofscore(
-                filtered_df[input_variable], data) / 100
+            y_coordinate = percentileofscore(filtered_df[input_variable], data) / 100
             if y_coordinate > 0.5:
                 fig.add_trace(
                     go.Scatter(
