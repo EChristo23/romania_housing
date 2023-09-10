@@ -26,7 +26,7 @@ app.layout = dbc.Container(
         html.Link(rel="stylesheet",
                   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"),
         dbc.Row(
-            html.H1("Romania's Housing App",
+            html.H1("Romania Housing App",
                     style={
                         'display': 'flex',
                         'justify-content': 'center',

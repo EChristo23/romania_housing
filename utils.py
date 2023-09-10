@@ -29,11 +29,16 @@ custom_data = ["id", 'property_type', 'county',
 attributes_dict = dict(zip(custom_data, range(len(custom_data))))
 
 
-def get_custom_data_index(attribute_name: str):
+def get_custom_data_index(attribute_name: str) -> int:
     return attributes_dict.get(attribute_name)
 
 
-def get_data():
+def get_data() -> pd.DataFrame:
+    '''
+    Reads data from database if it finds a connection string URI as environmental variable. Otherwise reads data from
+    data directory called 'df_input.pkl'.
+    :return: pd.DataFrame
+    '''
     uri = os.environ.get('URI')
     if uri:
         engine = db.create_engine(uri)
