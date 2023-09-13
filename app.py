@@ -47,7 +47,7 @@ app.layout = dbc.Container(
                                     'text-align': 'center'}),
                                 dcc.RadioItems(
                                     options=list(df.property_type.unique()),
-                                    value='apartment',
+                                    value='house',
                                     inputStyle={"margin-right": "10px"},
                                     inline=False,
                                     id='property_type'
@@ -125,7 +125,7 @@ app.layout = dbc.Container(
                 ),
                 dbc.Row(
                     html.Div(
-                        "Each point on the map is a property for sale. Click on a point to compare it with the selected data.",
+                        "Each point on the map is a property for sale. Click on a point to compare it with the selected data. Hover over the plot to gain more insights.",
                         style={'display': 'flex', 'justify-content': 'center'}
                     ),
                     className='my-0'
@@ -301,10 +301,8 @@ def property_count(county, property_type, input_variable, slider_value):
     Input('intermediate-value', 'data')
 )
 def update_map(input_variable, input_df):
-    #input_df = pd.DataFrame.from_dict(input_df)
 
     map_graph = px.scatter_mapbox(
-        # title='''Romania's Map''',
         data_frame=input_df,
         lat="latitude",
         lon="longitude",
@@ -343,27 +341,16 @@ def update_map(input_variable, input_df):
                       '<b>' + labs.get('price') + ' </b>: %{customdata[4]:.2f}<br>' +
                       '<b>' + labs.get('suprafata_utila') + ' </b>: %{customdata[5]:.2f}<br>'
     ).update_layout(
-        # coloraxis_showscale=False,
         legend=dict(yanchor="top", y=0.9, xanchor="left", x=0.4),
         transition_duration=500,
         paper_bgcolor='rgba(0,0,0,0)',
-        # margin={'l': 25, 'r': 0, 'b': 0, 't': 25},
         title_x=0.5,
         title=dict(
             text="Romania's Map",
             x=0.5,
             y=0.925,
             xanchor='center',
-            yanchor='top',
-            # pad = dict(
-            #            t = 0
-            #           ),
-            font=dict(
-
-                # family='Courier New, monospace',
-                # size=40,
-                # color='#000000'
-            )
+            yanchor='top'
         )
     )
     return map_graph
@@ -373,17 +360,16 @@ def update_map(input_variable, input_df):
     Output('ecdf', 'figure'),
     Input('variable', 'value'),
     Input('intermediate-value', 'data'),
-    Input('map', 'clickData')
-    #Input('map', 'selectedData')
+    Input('map', 'clickData'),
+    Input('map', 'selectedData')
 )
-def update_ecdf(input_variable, input_df, point#, selection
+def update_ecdf(input_variable, input_df, point, selection
                 ):
     filtered_df = pd.DataFrame.from_dict(input_df)
-    # filtered_df = input_df
-    # if selection:
-    #     ids = [i.get('customdata')[get_custom_data_index('id')]
-    #            for i in selection.get('points')]
-    #     filtered_df = filtered_df.loc[filtered_df.id.isin(ids)]
+    if selection:
+        ids = [i.get('customdata')[get_custom_data_index('id')]
+               for i in selection.get('points')]
+        filtered_df = filtered_df.loc[filtered_df.id.isin(ids)]
 
     fig = px.ecdf(
         filtered_df,
@@ -400,7 +386,6 @@ def update_ecdf(input_variable, input_df, point#, selection
         yaxis={'title': 'Cumulative Proportion (%)'},
         xaxis={'title': labs.get(input_variable)},
         yaxis_tickformat='.1%',
-        # transition_duration=0,
         paper_bgcolor='rgba(0,0,0,0)',
         title_x=0.5
     )
@@ -429,7 +414,6 @@ def update_ecdf(input_variable, input_df, point#, selection
                     go.Scatter(
                         x=[x_coordinate],
                         y=[y_coordinate],
-                        # mode="markers",
                         marker=dict(
                             color='#d382fa',
                             size=20,
@@ -452,7 +436,6 @@ def update_ecdf(input_variable, input_df, point#, selection
                     go.Scatter(
                         x=[x_coordinate],
                         y=[y_coordinate],
-                        # mode="markers",
                         marker=dict(
                             color='#d382fa',
                             size=20,
@@ -501,4 +484,4 @@ def table_row(clickdata):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
