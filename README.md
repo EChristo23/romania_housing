@@ -6,7 +6,7 @@ Romania has the highest home ownership rate in the EU ([source](https://ec.europ
 However, it is difficult to evaluate a property without any benchmark.
 This is the motivation for creating this app. With it, users can select a region and 
 compare how the **prices**, **net area** or **price per square meter** of a property compares to
-the selection. As a result, users can better informed decisions.
+the selection. As a result, users can make better informed decisions.
 
 Area and price are good indicators to evaluate a property, but there are many other factors to take into account such as 
 **year of construction**, **number of rooms** and **parking availability**. The input dataset
